@@ -43,14 +43,14 @@ describe('Integration tests - GET', () => {
 
         const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6IkFETUlOIiwiaWF0IjoxNjc2NTAyODc5LCJleHAiOjE2NzY1ODkyNzl9.3z3QD23w0PLbiZk4S2dwHbMzhBFcLeMZLN04bu2pXEQ';
 
-        const resp = await request(app).get('/purchase/me')
+        const resp = await request(app).get('/purchase/data/me')
             .set('Authorization', `Bearer ${token}`);
         expect(resp['statusCode']).toBe(200);
     });
 
     test('Should return 401 if no token is passed.', async() => {
 
-        const resp = await request(app).get('/purchase/me');
+        const resp = await request(app).get('/purchase/data/me');
         expect(resp['statusCode']).toBe(401);
     });
 
