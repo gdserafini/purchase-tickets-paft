@@ -13,10 +13,8 @@ import { newAxios } from "./lib/network.js";
  */
 const getRepository = async function(callback, ...params){
     validator(callback, ...params);
-    logger.debug(`Purchase service - getRepository - params: ${callback}, ${params}`);
 
     const data = await callback(...params);
-    logger.debug(`Purchase service - Callback - response: ${data}`);
 
     //if return a empty list throws too;
     ServerError.throwIf(!data || data.length === 0, 'NotFound');
@@ -32,15 +30,18 @@ const getRepository = async function(callback, ...params){
 const getResponse = async function(callback, ...params){
     try{
         validator(callback, ...params);
-        logger.debug(`Purchase service - getResponse - params: ${callback}, ${params}`);
+        logger.debug({callback, params}, 'Purchase service - getResponse - params:');
 
-        return {
+        const resp = {
             statusCode: 200,
             data: await getRepository(callback, ...params),
             message: 'Successfuly.'
         };
+        logger.debug({resp}, 'Purchase service - getResponse - response:');
+        return resp;
     }
     catch(error){
+        logger.error({error}, 'Purchase service - getResponse - error:');
         return {
             statusCode: error['statusCode'],
             message: error['message']
@@ -111,6 +112,8 @@ const updateCredit = async function(urlGet, ticket, sum=false){
                 credit: credit['credit'] - ticket['price'] < 0 ?
                     0 : credit['credit'] - ticket['price']
             });
+
+        return updated;
     };
     
     const updated = await updateData(
@@ -119,6 +122,8 @@ const updateCredit = async function(urlGet, ticket, sum=false){
             credit: credit['credit'] - ticket['price'] < 0 ?
                 0 : credit['credit'] - ticket['price']
         });
+
+    return updated;
 };
 
 //
@@ -154,8 +159,9 @@ export const createPurchaseData = async function(userId, showName){
         const ticket = await updateTicket(
                 `http://localhost:3005/ticket/data?show=${showName}`);
 
-        await updateCredit(
+        const updated = await updateCredit(
             `http://localhost:3003/credit/amount/${userId}`, ticket);
+        logger.debug({updated}, 'Purchase service - other service - response:');
 
         //this service
         return getResponse(createPurchase, {
@@ -165,6 +171,7 @@ export const createPurchaseData = async function(userId, showName){
         });
     }
     catch(error){
+        logger.error({error}, 'Purchase service - createPurchaseData - error:');
         return {
             statusCode: error['statusCode'] ? error['statusCode'] : 500,
             message: error['message'] ? 
@@ -202,14 +209,16 @@ export const deletePurchaseDataById = async function(id){
 
         const purch = await getPurch(id);
 
-        await updateCredit(
+        const updated = await updateCredit(
             `http://localhost:3003/credit/amount/${purch['userId']}`,
             await updateTicket(
                 `http://localhost:3005/ticket/data/${purch['ticketId']}`, true), true);
+        logger.debug({updated}, 'Purchase service - other service - response:');
 
         return getResponse(deletePurchaseById, id);
     }
     catch(error){
+        logger.error({error}, 'Purchase service - deletePurchaseDataById - error:');
         return {
             statusCode: error['statusCode'] ? error['statusCode'] : 500,
             message: error['message'] ? 

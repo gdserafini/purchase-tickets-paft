@@ -3,14 +3,12 @@ import jwt from 'jsonwebtoken';
 import { errorJson, ServerError, validator} from "./error.js";
 
 const SECRET = 'passwordticketauthserver';
-const ISSUER = 'auth service';
 
 //REFACTORING FUNCTIONS
 
 //return statusCode and message from any type of error
 const getError = function(res, error){
     validator(res, error);
-    logger.error(`Purchase middleware - getError - params: ${error}`);
 
     return res.status(error['statusCode'])
         .json(errorJson(error));
@@ -23,20 +21,22 @@ const getError = function(res, error){
 */
 const validMiddleware = function(req, res, next, callback){
     try{
-        logger.debug(
-            `Purchase middleware - validMiddleware - params: 
-            ${req.params.id} or ${req.body}`);
+        logger.debug({id: req.params.id, body: req.body},
+            'Purchase middleware - validMiddleware - params:');
 
-        return callback(req, next);
+        const resp = callback(req, next);
+        logger.debug({resp}, 'Purchase middleware - validMiddleware - response:');
+
+        return resp;
     }
     catch(error){
+        logger.error({error}, 'Purchase middleware - validMiddleware - error:');
         return getError(res, error);
     };
 };
 
 const getToken = function(req){
     const {authorization} = req['headers'];
-    logger.debug(`Purchase middleware - getToken - auth param: ${authorization}`);
 
     ServerError.throwIf(!authorization, 'Unauthorized');
 
@@ -68,8 +68,6 @@ export const JWT_SECURITY = function(req, res, next){
 
             req.userId = decoded.id;
             req.type = decoded.type;
-            logger.debug(
-                `Purchase middleware - JWT - decoded: ${req.userId}, ${req.type}`);
             
             return next();
         });

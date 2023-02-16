@@ -14,7 +14,6 @@ const router = express.Router();
 //abstract the error to send in the standard api format
 const getError = function(res, error){
     validator(res, error);
-    logger.error(`Purchase router - getError - params: ${error}`);
 
     return res.status(error['statusCode'])
         .json(errorJson(error));
@@ -27,10 +26,9 @@ const getError = function(res, error){
  */
 const getService = async function(callback, ...params){
     validator(callback, ...params);
-    logger.debug(`Purchase router - getService - params: ${callback}, ${params}`);
+    logger.debug({params}, 'Purchase router - getService - params:');
 
     const response = await callback(...params);
-    logger.info(`Purchase router - Callback - resp: ${response}`);
     
     ServerError.throwIf(!response, 'InternalError');
 
@@ -44,15 +42,16 @@ const getService = async function(callback, ...params){
 const getResponse = function(res, response){
     try{
         validator(res, response);
-        logger.info(`Purchase router - getResponse - params: ${response}`);
 
         ServerError.throwIf(!response['statusCode'] ||
             !response['message'], 'BadRequest');
 
+        logger.info({response}, 'Purchase router - getResponse - response:'); 
         return res.status(response['statusCode'])
             .json(response);
     }
     catch(error){
+        logger.error({error}, 'Purchase router - getResponse - error:');
         return getError(res, error);
     }
 };

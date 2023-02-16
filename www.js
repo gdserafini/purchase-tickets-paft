@@ -29,7 +29,7 @@ const server = http.createServer(app);
  */
 
 server.listen(port, () => {
-  logger.info('Server connected.');
+  logger.info(`Server connected.`);
   //initial data to test and check
   bootstrapDbPurchase();
 });

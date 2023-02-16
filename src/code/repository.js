@@ -5,7 +5,7 @@ import logger from './lib/log.js';
 //get data using prisma with any key:value
 export const getPurchase = async function(key, value, unique=false){
     validator(key, value);
-    logger.debug(`Purchase repository - getPurchase - params: ${key}, ${value}`);
+    logger.debug({key, value}, 'Purchase repository - getPurchase - params:');
 
     if(unique){
         return prisma.purchase.findUnique({
@@ -25,7 +25,7 @@ export const getPurchase = async function(key, value, unique=false){
 export const createPurchase = async function(data){
     validator(data);
     if(validatorResponse(data)) return null;
-    logger.debug(`Purchase repository - createPurchase - params: ${data}`);
+    logger.debug({data}, 'Purchase repository - createPurchase - params:');
 
     return prisma.purchase.create({
         data: data
@@ -36,7 +36,7 @@ export const createPurchase = async function(data){
 //delete all user's purchases by userId
 export const deletePurchase = async function(id){
     validator(id);
-    logger.debug(`Purchase repository - deletePurchase - params: ${id}`);
+    logger.debug({id}, 'Purchase repository - deletePurchase - params:');
 
     return prisma.purchase.deleteMany({
         where: {
@@ -47,6 +47,7 @@ export const deletePurchase = async function(id){
 
 export const deletePurchaseById = async function(id){
     validator(id);
+    logger.debug({id}, 'Purchase repository - deletePurchaseById - params:');
 
     return prisma.purchase.delete({
         where: {
