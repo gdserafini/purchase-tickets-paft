@@ -53,20 +53,17 @@ describe('Integration tests - GET', () => {
 
     test('Should return 200 if successfuly.', async() => {
 
-        const resp = await request(app).get('/purchase/1');
+        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6IkFETUlOIiwiaWF0IjoxNjc2NTAyODc5LCJleHAiOjE2NzY1ODkyNzl9.3z3QD23w0PLbiZk4S2dwHbMzhBFcLeMZLN04bu2pXEQ';
+
+        const resp = await request(app).get('/purchase/me')
+            .set('Authorization', `Bearer ${token}`);
         expect(resp['statusCode']).toBe(200);
     });
 
-    test('Should return 400 if invalid id is passed.', async() => {
+    test('Should return 401 if no token is passed.', async() => {
 
-        const resp = await request(app).get('/purchase/-1');
-        expect(resp['statusCode']).toBe(400);
-    });
-
-    test('Should return 404 if not found.', async() => {
-
-        const resp = await request(app).get('/purchase/999');
-        expect(resp['statusCode']).toBe(404);
+        const resp = await request(app).get('/purchase/me');
+        expect(resp['statusCode']).toBe(401);
     });
 
 });
@@ -93,14 +90,14 @@ describe('Integration tests - DELETE', () => {
 
     test('Should return 400 if invalid id is passed.', async () => {
         
-        const resp = await request(app).delete('/purchase/by-id/-1');
+        const resp = await request(app).delete('/purchase/me/-1');
         expect(resp['statusCode']).toBe(400);
 
     });
 
     test('Should return 403 if is unauthorized.', async () => {
 
-        const resp = await request(app).delete('/purchase/by-id/10000')
+        const resp = await request(app).delete('/purchase/me/10000')
             .set('blablabla', 'no token');
         expect(resp['statusCode']).toBe(401);
 
@@ -115,7 +112,7 @@ describe('Integration tests - DELETE', () => {
         });
 
         const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6IkFETUlOIiwiaWF0IjoxNjc2NTAyODc5LCJleHAiOjE2NzY1ODkyNzl9.3z3QD23w0PLbiZk4S2dwHbMzhBFcLeMZLN04bu2pXEQ';
-        const resp = await request(app).delete(`/purchase/by-id/${created['id']}`)
+        const resp = await request(app).delete(`/purchase/me/${created['id']}`)
             .set('Authorization', `Bearer ${token}`);
 
         expect(resp['statusCode']).toBe(200);

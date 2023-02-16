@@ -64,7 +64,10 @@ export const JWT_SECURITY = function(req, res, next){
     return validMiddleware(req, res, next, () => {
 
         jwt.verify(getToken(req), SECRET, (error, decoded) => {
-            ServerError.throwIf(error, 'InternalError');
+            ServerError
+                .throwIf(error, 'InternalError')
+                .throwIf(!decoded.id || isNaN(decoded.id) ||
+                    decoded.id <= 0, 'BadRequest');
 
             req.userId = decoded.id;
             req.type = decoded.type;

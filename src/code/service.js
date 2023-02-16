@@ -134,7 +134,7 @@ const validCredit = async function(showName, userId){
     const cred = await getData(
         `http://localhost:3003/credit/amount/${userId}`);
 
-    ServerError.throwIf(cred['credit'] < tick['price'], 'BadRequest');
+    ServerError.throwIf(cred['credit'] < tick['price'], 'Forbidden');
 };
 
 /**

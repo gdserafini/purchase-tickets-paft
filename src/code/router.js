@@ -64,11 +64,10 @@ const getResponse = function(res, response){
  * get -> middleware, funciotn with express params
  * return standard api response format or error
  */
-router.get('/:id', validId, async (req, res) => {
+router.get('/me', JWT_SECURITY, async (req, res) => {
 
     return getResponse(res, 
-        await getService(getPurchaseData, 
-            'userId', parseInt(req.params.id)));
+        await getService(getPurchaseData, 'userId', req.userId));
 });
 
 /**
@@ -94,7 +93,7 @@ router.delete('/me', JWT_SECURITY, async (req, res) => {
 
 });
 
-router.delete('/by-id/:id', validId, JWT_SECURITY, async (req, res) => {
+router.delete('/me/:id', validId, JWT_SECURITY, async (req, res) => {
 
     return getResponse(res,
         await getService(deletePurchaseDataById, req.id));
