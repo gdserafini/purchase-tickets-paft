@@ -1,8 +1,11 @@
 import logger from './log.js';
 import jwt from 'jsonwebtoken';
 import { errorJson, ServerError, validator} from "./error.js";
+import dotenv from 'dotenv';
 
-const SECRET = 'passwordticketauthserver';
+dotenv.config();
+
+//const process.env.SECRET = 'passwordticketauthserver';
 
 //REFACTORING FUNCTIONS
 
@@ -64,7 +67,7 @@ export const JWT_SECURITY = function(req, res, next){
 
     return validMiddleware(req, res, next, () => {
 
-        jwt.verify(getToken(req), SECRET, (error, decoded) => {
+        jwt.verify(getToken(req), process.env.SECRET, (error, decoded) => {
             ServerError
                 .throwIf(error, 'InternalError')
                 .throwIf(!decoded.id || isNaN(decoded.id) ||
