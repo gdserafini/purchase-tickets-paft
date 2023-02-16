@@ -10,7 +10,6 @@ const router = express.Router();
 
 //REFACTORING FUNCTIONS
 
-
 //abstract the error to send in the standard api format
 const getError = function(res, error){
     validator(res, error);
@@ -61,7 +60,7 @@ const getResponse = function(res, response){
 //ROUTES
 
 /**
- * get -> middleware, funciotn with express params
+ * get -> middleware, function with express params
  * return standard api response format or error
  */
 router.get('/me', JWT_SECURITY, async (req, res) => {
@@ -74,7 +73,7 @@ router.get('/me', JWT_SECURITY, async (req, res) => {
  * post -> middleware, funciotn with express params
  * return standard api response format or error
  */
-router.post('/me', validBody, JWT_SECURITY, async (req, res) => {
+router.post('/me', JWT_SECURITY, async (req, res) => {
 
     const {show} = req.query;
 
@@ -83,7 +82,7 @@ router.post('/me', validBody, JWT_SECURITY, async (req, res) => {
 });
 
 /**
- * delete -> middleware id with express params
+ * delete -> middleware jwt with express params
  * return standard api response format or error
  */
 router.delete('/me', JWT_SECURITY, async (req, res) => {
@@ -93,6 +92,10 @@ router.delete('/me', JWT_SECURITY, async (req, res) => {
 
 });
 
+/**
+ * delete -> middlewares, express params
+ * return standard api response or error
+ */
 router.delete('/me/:id', validId, JWT_SECURITY, async (req, res) => {
 
     return getResponse(res,
