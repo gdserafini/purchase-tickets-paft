@@ -6,7 +6,7 @@ const SECRET = 'passwordticketauthserver';
 
 //REFACTORING FUNCTIONS
 
-//return statusCode and message from any type of error
+//return statusCode and message from any type of error (api)
 const getError = function(res, error){
     validator(res, error);
 
@@ -35,6 +35,9 @@ const validMiddleware = function(req, res, next, callback){
     };
 };
 
+//
+
+//process the bearer token;
 const getToken = function(req){
     const {authorization} = req['headers'];
 
@@ -46,9 +49,7 @@ const getToken = function(req){
         .throwIf(bearer !== 'Bearer', 'BadRequest');
 
     return token;
-}
-
-//
+};
 
 /**
  * get the bearer token, validate, process

@@ -79,6 +79,7 @@ export const getPurchaseData = async function(key, value){
 };
 
 //REFACTORING TICKETS/CREDIT
+
 const updateTicket = async function(urlGet, sum=false){
     const ticket = await getData(urlGet);
 
@@ -102,6 +103,7 @@ const updateTicket = async function(urlGet, sum=false){
     return ticket;
 };
 
+//update credit using ticket data
 const updateCredit = async function(urlGet, ticket, sum=false){
     const credit = await getData(urlGet);
 
@@ -128,6 +130,7 @@ const updateCredit = async function(urlGet, ticket, sum=false){
 
 //
 
+//valid if can buy or not (user credit)
 const validCredit = async function(showName, userId){
     const tick = await getData(
         `http://localhost:3005/ticket/data?show=${showName}`);
@@ -203,6 +206,12 @@ const getPurch = async function(id){
     return purch;
 };
 
+/**
+ * delete a specific purchase by id
+ * 
+ * @param {*} id purchase id 
+ * @returns stantar api response
+ */
 export const deletePurchaseDataById = async function(id){
     try{
         validator(id);

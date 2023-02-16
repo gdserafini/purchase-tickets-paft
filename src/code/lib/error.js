@@ -26,7 +26,11 @@ const errorSet = {
     'InternalError': new ServerError(500, 'Internal server error.'),
 };
 
-//api standard format
+/**
+ * 
+ * @param {*} error error to format
+ * @returns api standard error format
+ */
 export const errorJson = function(error){
     return {
         statusCode: error['statusCode'],
@@ -36,8 +40,13 @@ export const errorJson = function(error){
 
 //VALIDATORS
 
+/**
+ * 
+ * @param  {...any} params any params
+ * @returns error 400
+ */
 export const validator = function(...params){
-    if(!params) return;
+    if(!params) throw new ServerError(400, 'Bad request.');
 
     for(let p of params){
         if(!p) throw new ServerError(400, 'Bad request.');

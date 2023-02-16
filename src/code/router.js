@@ -63,7 +63,7 @@ const getResponse = function(res, response){
  * get -> middleware, function with express params
  * return standard api response format or error
  */
-router.get('/me', JWT_SECURITY, async (req, res) => {
+router.get('/list/me', JWT_SECURITY, async (req, res) => {
 
     return getResponse(res, 
         await getService(getPurchaseData, 'userId', req.userId));

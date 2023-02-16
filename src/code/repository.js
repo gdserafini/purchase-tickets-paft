@@ -2,6 +2,7 @@ import {prisma} from '../../prisma/prisma.js';
 import { validator, validatorResponse } from './lib/error.js';
 import logger from './lib/log.js';
 
+//REFACTORING FUNCTIONS
 const validAndDebug = function(...params){
     validator(...params);
     logger.debug({...params}, 'Purchase repository - getPrisma - params:');
@@ -12,8 +13,17 @@ const getPrisma = async function(callback, ...params){
     validAndDebug(...params);
     return callback(...params);
 };
- 
-//get data using prisma with any key:value
+
+//
+
+/**
+ * get data using prisma with any key:value
+ * 
+ * @param {*} key name
+ * @param {*} value value
+ * @param {*} unique unique (true) or list
+ * @returns prisma response
+ */
 export const getPurchase = async function(key, value, unique=false){
     return getPrisma(async () => {
         if(unique){
@@ -30,7 +40,12 @@ export const getPurchase = async function(key, value, unique=false){
     }, key, value);
 };
 
-//create using prisma with any valid data (body)
+/**
+ * create using prisma with any valid data (body)
+ * 
+ * @param {*} data obj to create
+ * @returns prisma response
+ */
 export const createPurchase = async function(data){
     if(validatorResponse(data)) return null;
 
@@ -41,7 +56,12 @@ export const createPurchase = async function(data){
     }, data);
 };
 
-//delete all user's purchases by userId
+/**
+ * delete all user's purchases by userId
+ * 
+ * @param {*} id user's id
+ * @returns prisma response
+ */
 export const deletePurchase = async function(id){
     return getPrisma( async () => {
         return prisma.purchase.deleteMany({
@@ -52,6 +72,12 @@ export const deletePurchase = async function(id){
     }, id);
 };
 
+/**
+ * delete a specific purchase by id
+ * 
+ * @param {*} id purchase id
+ * @returns prisma response
+ */
 export const deletePurchaseById = async function(id){
     return getPrisma(async () => {
         return prisma.purchase.delete({
