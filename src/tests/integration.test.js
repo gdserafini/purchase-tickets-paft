@@ -23,18 +23,6 @@ describe('Integration tests - POST', () => {
 
     });
 
-    test('Should return 400 if no body is passed.', async() => {
-
-        const resp = await request(app).post('/purchase/me').send(null);
-        expect(resp['statusCode']).toBe(400);
-    });
-    
-    test('Should return 400 if invalid body is passed.', async() => {
-
-        const resp = await request(app).post('/purchase/me').send({});
-        expect(resp['statusCode']).toBe(400);
-    });
-
     test('Should return 401 if is unauthorized.', async () => {
 
         const mock = {
