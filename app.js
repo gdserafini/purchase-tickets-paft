@@ -1,6 +1,18 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import purchaseRouter from './src/code/router.js';
+import dotenv from 'dotenv';
+import dotenvExpand from 'dotenv-expand';
+
+dotenv.config();
+
+//config
+const result = dotenvExpand.expand(
+    {
+        ignoreProcessEnv: false,
+        parsed: process.env
+    }
+);  
 
 const app = express();
 
