@@ -5,8 +5,6 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-//const process.env.SECRET = 'passwordticketauthserver';
-
 //REFACTORING FUNCTIONS
 
 //return statusCode and message from any type of error (api)
