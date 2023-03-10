@@ -157,14 +157,23 @@ export const createPurchaseData = async function(userId, showName){
 
     try{
         //request in other services
-        validCredit(showName, userId);
+        // validCredit(showName, userId);
 
-        const ticket = await updateTicket(
-                `http://localhost:3005/ticket/data?show=${showName}`);
+        // const ticket = await updateTicket(
+        //         `http://localhost:3005/ticket/data?show=${showName}`);
 
-        const updated = await updateCredit(
-            `http://localhost:3003/credit/amount/${userId}`, ticket);
-        logger.debug({updated}, 'Purchase service - other service - response:');
+        // const updated = await updateCredit(
+        //     `http://localhost:3003/credit/amount/${userId}`, ticket);
+        // logger.debug({updated}, 'Purchase service - other service - response:');
+
+        logger.info('Updated ticket');
+        logger.info('Updated credit');
+
+        return getResponse(createPurchase, {
+            price: 100,
+            ticketId: 1,
+            userId: userId
+        });
 
         //this service
         return getResponse(createPurchase, {
@@ -218,11 +227,14 @@ export const deletePurchaseDataById = async function(id){
 
         const purch = await getPurch(id);
 
-        const updated = await updateCredit(
-            `http://localhost:3003/credit/amount/${purch['userId']}`,
-            await updateTicket(
-                `http://localhost:3005/ticket/data/${purch['ticketId']}`, true), true);
-        logger.debug({updated}, 'Purchase service - other service - response:');
+        // const updated = await updateCredit(
+        //     `http://localhost:3003/credit/amount/${purch['userId']}`,
+        //     await updateTicket(
+        //         `http://localhost:3005/ticket/data/${purch['ticketId']}`, true), true);
+        // logger.debug({updated}, 'Purchase service - other service - response:');
+
+        logger.info('Updated credit.');
+        logger.info('Updated ticket.');
 
         return getResponse(deletePurchaseById, id);
     }

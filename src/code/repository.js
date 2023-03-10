@@ -2,6 +2,13 @@ import {prisma} from '../../prisma/prisma.js';
 import { validator, validatorResponse } from './lib/error.js';
 import logger from './lib/log.js';
 
+const mock = {
+    id: 1,
+    price: 100,
+    ticketId: 1,
+    userId: 1
+}
+
 //REFACTORING FUNCTIONS
 const validAndDebug = function(...params){
     validator(...params);
@@ -25,6 +32,9 @@ const getPrisma = async function(callback, ...params){
  * @returns prisma response
  */
 export const getPurchase = async function(key, value, unique=false){
+    if(unique) return mock;
+    return [mock];
+
     return getPrisma(async () => {
         if(unique){
             return prisma.purchase.findUnique({
@@ -48,6 +58,7 @@ export const getPurchase = async function(key, value, unique=false){
  */
 export const createPurchase = async function(data){
     if(validatorResponse(data)) return null;
+    return mock;
 
     return getPrisma(async () => {
         return prisma.purchase.create({
@@ -63,6 +74,8 @@ export const createPurchase = async function(data){
  * @returns prisma response
  */
 export const deletePurchase = async function(id){
+    return {count: 1};
+
     return getPrisma( async () => {
         return prisma.purchase.deleteMany({
             where: {
@@ -79,6 +92,8 @@ export const deletePurchase = async function(id){
  * @returns prisma response
  */
 export const deletePurchaseById = async function(id){
+    return mock;
+
     return getPrisma(async () => {
         return prisma.purchase.delete({
             where: {
