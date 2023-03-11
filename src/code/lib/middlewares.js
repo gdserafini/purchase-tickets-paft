@@ -65,17 +65,22 @@ export const JWT_SECURITY = function(req, res, next){
 
     return validMiddleware(req, res, next, () => {
 
-        jwt.verify(getToken(req), process.env.SECRET, (error, decoded) => {
-            ServerError
-                .throwIf(error, 'InternalError')
-                .throwIf(!decoded.id || isNaN(decoded.id) ||
-                    decoded.id <= 0, 'BadRequest');
+        req.userId = 1;
+        req.type = 'ADMIN';
 
-            req.userId = decoded.id;
-            req.type = decoded.type;
+        next();
+
+        // jwt.verify(getToken(req), process.env.SECRET, (error, decoded) => {
+        //     ServerError
+        //         .throwIf(error, 'InternalError')
+        //         .throwIf(!decoded.id || isNaN(decoded.id) ||
+        //             decoded.id <= 0, 'BadRequest');
+
+        //     req.userId = decoded.id;
+        //     req.type = decoded.type;
             
-            return next();
-        });
+        //     return next();
+        // });
     });
 };
 
